@@ -1,0 +1,111 @@
+#TODO
+#1. Create CSV so it can be imported into Excel
+#2. Generalize It
+
+import csv
+
+###################setup variables#####################
+P=270000
+i=0.044/12
+n=360
+MonthlyPayment = (P*i)/(1-pow((1+i),-n))
+(totalPrincipal,totalInterest,totalPayment) = (0,0,0)
+#####################################################
+
+#read in the extra principal amounts###
+extra = []
+count = 0
+f = open('extraprincipal','r')
+for line in f:
+    extra.append(line)
+    count = count + 1
+f.close()
+
+for number in range(0,n-count):
+    extra.append(0)
+
+dictkey = range(1,361)
+
+dictitems = zip(dictkey,extra)
+
+principaldict = dict(dictitems)
+####################################
+
+
+print "Loan Amount:", P
+print "Annual Interest:",  i*12*100
+print "Payment: %10.2f\n" % MonthlyPayment
+
+def printtoscreen(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment):
+
+    period = 1
+    #generate titles
+    print "\t Payment \t Principal \t Interest \t Extra Principal  Balance"
+
+    #generate amortization table
+    while period < n+1:
+        intpayment = (P*i)
+        if period == n:
+            MonthlyPayment = P + intpayment
+
+        #total stuff
+        totalPrincipal = totalPrincipal + (MonthlyPayment - intpayment) + int(principaldict[period])
+        totalInterest = totalInterest + intpayment
+        totalPayment = totalPayment + MonthlyPayment + int(principaldict[period])
+
+        #this should handle finishing early because of extra interest payments
+        if P < MonthlyPayment:
+            MonthlyPayment = P + intpayment
+            P = P - (MonthlyPayment - intpayment) - int(principaldict[period])
+            print "%d \t %10.2f \t %10.2f \t %10.2f \t %10.2f \t %10.2f"% (period, MonthlyPayment, MonthlyPayment-intpayment, intpayment, int(principaldict[period]),P)
+            break
+
+        P = P - (MonthlyPayment - intpayment) - int(principaldict[period])
+
+        print "%d \t %10.2f \t %10.2f \t %10.2f \t %10.2f \t %10.2f"% (period, MonthlyPayment, MonthlyPayment-intpayment, intpayment, int(principaldict[period]),P) 
+        period = period + 1
+
+    #generate totals
+    print "Totals \t %10.2f \t %10.2f \t %10.2f" % (totalPayment, totalPrincipal, totalInterest)
+
+def makecsv(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment):
+    #create itereable
+    csvfinal = []
+    csvthisime = []
+    period = 1
+    
+    #generate titles
+    csvthistime = [None, "Payment","Principal","Interest","Extra Principal", "Balance"]
+    csvfinal.append(csvthistime)
+    
+    #generate amortization table
+    while period < n+1:
+        intpayment = (P*i)
+        if period == n:
+            MonthlyPayment = P + intpayment
+
+        #total stuff
+        totalPrincipal = totalPrincipal + (MonthlyPayment - intpayment) + int(principaldict[period])
+        totalInterest = totalInterest + intpayment
+        totalPayment = totalPayment + MonthlyPayment + int(principaldict[period])
+
+        #this should handle finishing early because of extra interest payments
+        if P < MonthlyPayment:
+            MonthlyPayment = P + intpayment
+            P = P - (MonthlyPayment - intpayment) - int(principaldict[period])
+            csvfinal.append([period, MonthlyPayment, MonthlyPayment-intpayment, intpayment, int(principaldict[period]),P])
+            break
+
+        P = P - (MonthlyPayment - intpayment) - int(principaldict[period])
+
+        csvfinal.append([period, MonthlyPayment, MonthlyPayment-intpayment, intpayment, int(principaldict[period]),P]) 
+        period = period + 1
+
+    #generate totals
+    csvfinal.append([None,totalPayment, totalPrincipal, totalInterest])
+
+    writer = csv.writer(open("some.csv", "wb"))
+    writer.writerows(csvfinal)
+
+printtoscreen(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment)
+makecsv(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment)
