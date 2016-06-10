@@ -61,7 +61,7 @@ def printtoscreen(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment
     print "Loan Amount:", P
     print "Annual Interest:",  i*12*100
     print "Payment: %10.2f\n" % MonthlyPayment
-
+    
     period = 1
     #generate titles
     print "\t Payment \t Principal \t Interest \t Extra Principal  Balance"
@@ -72,21 +72,24 @@ def printtoscreen(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment
         if period == n:
             MonthlyPayment = P + intpayment
 
-        #total stuff
-        totalPrincipal = totalPrincipal + (MonthlyPayment - intpayment) + int(principaldict[period])
-        totalInterest = totalInterest + intpayment
-        totalPayment = totalPayment + MonthlyPayment + int(principaldict[period])
+        
 
         #this should handle finishing early because of extra interest payments
         if P < MonthlyPayment:
             MonthlyPayment = P + intpayment
-            P = P - (MonthlyPayment - intpayment) - int(principaldict[period])
-            print "%d \t %10.2f \t %10.2f \t %10.2f \t %10.2f \t %10.2f"% (period, MonthlyPayment, MonthlyPayment-intpayment, intpayment, int(principaldict[period]),P)
+            P = P - (MonthlyPayment - intpayment) - float(principaldict[period])
+            print "%d \t %10.2f \t %10.2f \t %10.2f \t %10.2f \t %10.2f"% (period, MonthlyPayment, MonthlyPayment-intpayment, intpayment, float(principaldict[period]),P)
             break
 
-        P = P - (MonthlyPayment - intpayment) - int(principaldict[period])
+        P = P - (MonthlyPayment - intpayment) - float(principaldict[period])
 
-        print "%d \t %10.2f \t %10.2f \t %10.2f \t %10.2f \t %10.2f"% (period, MonthlyPayment, MonthlyPayment-intpayment, intpayment, int(principaldict[period]),P) 
+        print "%d \t %10.2f \t %10.2f \t %10.2f \t %10.2f \t %10.2f"% (period, MonthlyPayment, MonthlyPayment-intpayment, intpayment, float(principaldict[period]),P) 
+        
+        #total stuff
+        totalPrincipal = totalPrincipal + (MonthlyPayment - intpayment) + float(principaldict[period])
+        totalInterest = totalInterest + intpayment
+        totalPayment = totalPayment + MonthlyPayment + float(principaldict[period])
+        
         period = period + 1
 
     #generate totals
@@ -108,11 +111,6 @@ def makecsv(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment):
         if period == n:
             MonthlyPayment = P + intpayment
 
-        #total stuff
-        totalPrincipal = totalPrincipal + (MonthlyPayment - intpayment) + int(principaldict[period])
-        totalInterest = totalInterest + intpayment
-        totalPayment = totalPayment + MonthlyPayment + int(principaldict[period])
-
         #this should handle finishing early because of extra interest payments
         if P < MonthlyPayment:
             MonthlyPayment = P + intpayment
@@ -124,6 +122,11 @@ def makecsv(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment):
 
         csvfinal.append([period, MonthlyPayment, MonthlyPayment-intpayment, intpayment, int(principaldict[period]),P]) 
         period = period + 1
+
+        #total stuff
+        totalPrincipal = totalPrincipal + (MonthlyPayment - intpayment) + int(principaldict[period])
+        totalInterest = totalInterest + intpayment
+        totalPayment = totalPayment + MonthlyPayment + int(principaldict[period])
 
     #generate totals
     csvfinal.append([None,totalPayment, totalPrincipal, totalInterest])
