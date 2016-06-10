@@ -1,9 +1,11 @@
 __author__ = "Eric Mesa"
-__version__ = "v2.0"
+__version__ = "v2.1"
 __license__ = "GNU GPL v3.0"
 __copyright__ = "(c) 2010 Eric Mesa"
 __email__ = "ericsbinaryworld at gmail dot com"
 
+#TODO
+#need to fix so it uses real numbers instead of integers
 
 import csv,sys
 
@@ -145,8 +147,9 @@ extra = []
 count = 0
 f = open('extraprincipal','r')
 for line in f:
-    extra.append(line)
-    count = count + 1
+    if "#" not in line:
+        extra.append(line)
+        count = count + 1
 f.close()
 
 for number in range(0,n-count):
