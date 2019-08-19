@@ -114,22 +114,22 @@ def makecsv(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment):
         #this should handle finishing early because of extra interest payments
         if P < MonthlyPayment:
             MonthlyPayment = P + intpayment
-            P = P - (MonthlyPayment - intpayment) - int(principaldict[period])
-            csvfinal.append([period, MonthlyPayment, MonthlyPayment-intpayment, intpayment, int(principaldict[period]),P])
+            P = P - (MonthlyPayment - intpayment) - float(principaldict[period])
+            csvfinal.append([period, MonthlyPayment, MonthlyPayment-intpayment, intpayment, float(principaldict[period]),P])
             break
 
-        P = P - (MonthlyPayment - intpayment) - int(principaldict[period])
+        P = P - (MonthlyPayment - intpayment) - float(principaldict[period])
 
-        csvfinal.append([period, MonthlyPayment, MonthlyPayment-intpayment, intpayment, int(principaldict[period]),P]) 
+        csvfinal.append([period, MonthlyPayment, MonthlyPayment-intpayment, intpayment, float(principaldict[period]),P]) 
         period = period + 1
 
         #total stuff
-        totalPrincipal = totalPrincipal + (MonthlyPayment - intpayment) + int(principaldict[period])
+        totalPrincipal = totalPrincipal + (MonthlyPayment - intpayment) + float(principaldict[period])
         totalInterest = totalInterest + intpayment
-        totalPayment = totalPayment + MonthlyPayment + int(principaldict[period])
+        totalPayment = totalPayment + MonthlyPayment + float(principaldict[period])
 
     #generate totals
-    csvfinal.append([None,totalPayment, totalPrincipal, totalInterest])
+    csvfinal.append([None,totalPayment, totalPrincipal, totalInterest]) #not correct in CSV, correct when printed on screen
 
     writer = csv.writer(open("amort.csv", "wb"))
     writer.writerows(csvfinal)
