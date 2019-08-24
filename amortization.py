@@ -1,7 +1,7 @@
 __author__ = "Eric Mesa"
 __version__ = "v2.1"
 __license__ = "GNU GPL v3.0"
-__copyright__ = "(c) 2010 Eric Mesa"
+__copyright__ = "(c) 2010-2019 Eric Mesa"
 __email__ = "ericsbinaryworld at gmail dot com"
 
 import csv,sys
