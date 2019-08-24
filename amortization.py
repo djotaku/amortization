@@ -4,9 +4,6 @@ __license__ = "GNU GPL v3.0"
 __copyright__ = "(c) 2010 Eric Mesa"
 __email__ = "ericsbinaryworld at gmail dot com"
 
-#TODO
-#need to fix so it uses real numbers instead of integers
-
 import csv,sys
 
 def getargs():
