@@ -126,13 +126,14 @@ def makecsv(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment):
         P = P - (MonthlyPayment - intpayment) - float(principaldict[period])
 
         csvfinal.append([period, MonthlyPayment, MonthlyPayment-intpayment, intpayment, float(principaldict[period]),P]) 
-        period = period + 1
 
         #total stuff
         totalPrincipal = totalPrincipal + (MonthlyPayment - intpayment) + float(principaldict[period])
         totalInterest = totalInterest + intpayment
         totalPayment = totalPayment + MonthlyPayment + float(principaldict[period])
 
+        period = period + 1
+        
     #generate totals
     csvfinal.append([None,totalPayment, totalPrincipal, totalInterest]) #not correct in CSV, correct when printed on screen
 
