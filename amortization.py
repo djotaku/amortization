@@ -76,6 +76,10 @@ def printtoscreen(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment
             MonthlyPayment = P + intpayment
             P = P - (MonthlyPayment - intpayment) - float(principaldict[period])
             print "%d \t %10.2f \t %10.2f \t %10.2f \t %10.2f \t %10.2f"% (period, MonthlyPayment, MonthlyPayment-intpayment, intpayment, float(principaldict[period]),P)
+            #this should handle to totals being slightly off by amount of last payment
+            totalPrincipal = totalPrincipal + (MonthlyPayment - intpayment) + float(principaldict[period])
+            totalInterest = totalInterest + intpayment
+            totalPayment = totalPayment + MonthlyPayment + float(principaldict[period])
             break
 
         P = P - (MonthlyPayment - intpayment) - float(principaldict[period])
@@ -113,6 +117,10 @@ def makecsv(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment):
             MonthlyPayment = P + intpayment
             P = P - (MonthlyPayment - intpayment) - float(principaldict[period])
             csvfinal.append([period, MonthlyPayment, MonthlyPayment-intpayment, intpayment, float(principaldict[period]),P])
+            #this should handle to totals being slightly off by amount of last payment
+            totalPrincipal = totalPrincipal + (MonthlyPayment - intpayment) + float(principaldict[period])
+            totalInterest = totalInterest + intpayment
+            totalPayment = totalPayment + MonthlyPayment + float(principaldict[period])
             break
 
         P = P - (MonthlyPayment - intpayment) - float(principaldict[period])
