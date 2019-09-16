@@ -6,15 +6,13 @@ __email__ = "ericsbinaryworld at gmail dot com"
 
 import csv,sys
 
-def getargs():
-    """Grab the commandline arguments and put them into a list.  Also give help if no arguments provided"""
-    args = []
-
-    try:
-        args = sys.argv[1:]
-    except:
-        print """
+USAGE = """
     Usage:
+    python amortization.py -csv|screen -P # -i # -n #
+    
+    example with principle of $270,000, 4.44% interest, for 30 years:
+    python amortization.py -csv -P 270000 -i .0444 -n 360
+    
     -csv:     create a Comma Separated Values file to import into excel
     -screen:  print the amortization table to screen
     -P:       for # enter principal amount
@@ -30,26 +28,17 @@ def getargs():
 
     would be 0 extra principal the first month, 200 extra the second month, etc
     """
+
+def getargs():
+    """Grab the commandline arguments and put them into a list.  Also give help if no arguments provided."""
+    args = []
+
+    try:
+        args = sys.argv[1:]
+    except:
+        print USAGE
     if len(args) < 7:
-        sys.exit("""
-    Usage:
-    amortization.py -csv|screen -P # -i # -n #
-
-    -csv:     create a Comma Separated Values file to import into excel
-    -screen:  print the amortization table to screen
-    -P:       for # enter principal amount
-    -i:       for # enter interest as a decimal
-    -n:       for # enter number of months
-
-    If you want to see the effect of extra monthly payments, create a file called extraprincipal and put the values in one after another one line at a time.  
-    Ex:
-    0
-    200
-    300
-    0
-
-    would be 0 extra principal the first month, 200 extra the second month, etc
-    """)
+        sys.exit(USAGE)
     return args
 
 
@@ -176,20 +165,4 @@ if arguments[0] == '-csv':
 elif arguments[0] == '-screen':
     printtoscreen(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment)
 else:
-    print """
-    Usage:
-    -csv:     create a Comma Separated Values file to import into excel
-    -screen:  print the amortization table to screen
-    -P:       for # enter principal amount
-    -i:       for # enter interest as a decimal
-    -n:       for # enter number of months
-
-    If you want to see the effect of extra monthly payments, create a file called extraprincipal and put the values in one after another one line at a time.  
-    Ex:
-    0
-    200
-    300
-    0
-
-    would be 0 extra principal the first month, 200 extra the second month, etc
-    """
+    print USAGE
