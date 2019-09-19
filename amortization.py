@@ -43,23 +43,33 @@ def getargs():
     return args
 
 
-def printtoscreen(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment):
+#helper functions
+def titles(P,i,MonthlyPayment,destination):
+    """ Print titles to screen or into CSV file. """
+    if destination == "screen":
+        print(f"Loan Amount: {P}")
+        print(f"Annual Interest: {i*12*100}")
+        print(f"Payment: {MonthlyPayment:10.2f}")
+        print("\t Payment \t Principal \t Interest \t Extra Principal  Balance")
+    else:
+        print("will have csv code here")
 
-    print(f"Loan Amount: {P}")
-    print(f"Annual Interest: {i*12*100}")
-    print(f"Payment: {MonthlyPayment:10.2f}")
+def calculate(P,i,n,MonthlyPayment,totalPrincipal,totalInterest, totalPayment,destination):
+    """This will make the calculation and print to screen or CSV"""
+    pass
+
+def output(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment,destination):
+    
+    #generate titles
+    titles(P,i,MonthlyPayment,destination)
     
     period = 1
-    #generate titles
-    print("\t Payment \t Principal \t Interest \t Extra Principal  Balance")
-
+    
     #generate amortization table
     while period < n+1:
         intpayment = (P*i)
         if period == n:
             MonthlyPayment = P + intpayment
-
-        
 
         #this should handle finishing early because of extra interest payments
         if P < MonthlyPayment:
@@ -164,6 +174,6 @@ principaldict = dict(dictitems)
 if arguments[0] == '-csv':
     makecsv(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment)
 elif arguments[0] == '-screen':
-    printtoscreen(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment)
+    output(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment,"screen")
 else:
     print(USAGE)
