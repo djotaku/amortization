@@ -1,10 +1,11 @@
 __author__ = "Eric Mesa"
-__version__ = "v2.2"
+__version__ = "v3.0"
 __license__ = "GNU GPL v3.0"
 __copyright__ = "(c) 2010-2019 Eric Mesa"
 __email__ = "ericsbinaryworld at gmail dot com"
 
-import csv,sys
+import csv
+import sys
 
 USAGE = """
     Usage:
@@ -36,7 +37,7 @@ def getargs():
     try:
         args = sys.argv[1:]
     except:
-        print USAGE
+        print(USAGE)
     if len(args) < 7:
         sys.exit(USAGE)
     return args
@@ -44,13 +45,13 @@ def getargs():
 
 def printtoscreen(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment):
 
-    print "Loan Amount:", P
-    print "Annual Interest:",  i*12*100
-    print "Payment: %10.2f\n" % MonthlyPayment
+    print(f"Loan Amount: {P}")
+    print(f"Annual Interest: {i*12*100}")
+    print(f"Payment: {MonthlyPayment:10.2f}")
     
     period = 1
     #generate titles
-    print "\t Payment \t Principal \t Interest \t Extra Principal  Balance"
+    print("\t Payment \t Principal \t Interest \t Extra Principal  Balance")
 
     #generate amortization table
     while period < n+1:
@@ -64,7 +65,7 @@ def printtoscreen(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment
         if P < MonthlyPayment:
             MonthlyPayment = P + intpayment
             P = P - (MonthlyPayment - intpayment) - float(principaldict[period])
-            print "%d \t %10.2f \t %10.2f \t %10.2f \t %10.2f \t %10.2f"% (period, MonthlyPayment, MonthlyPayment-intpayment, intpayment, float(principaldict[period]),P)
+            print(f"{period:d} \t {MonthlyPayment:10.2f} \t {MonthlyPayment-intpayment:10.2f} \t {intpayment:10.2f} \t {float(principaldict[period]):10.2f} \t {P:10.2f}")  
             #this should handle to totals being slightly off by amount of last payment
             totalPrincipal = totalPrincipal + (MonthlyPayment - intpayment) + float(principaldict[period])
             totalInterest = totalInterest + intpayment
@@ -73,7 +74,7 @@ def printtoscreen(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment
 
         P = P - (MonthlyPayment - intpayment) - float(principaldict[period])
 
-        print "%d \t %10.2f \t %10.2f \t %10.2f \t %10.2f \t %10.2f"% (period, MonthlyPayment, MonthlyPayment-intpayment, intpayment, float(principaldict[period]),P) 
+        print(f"{period:d} \t {MonthlyPayment:10.2f} \t {MonthlyPayment-intpayment:10.2f} \t {intpayment:10.2f} \t {float(principaldict[period]):10.2f} \t {P:10.2f}") 
         
         #total stuff
         totalPrincipal = totalPrincipal + (MonthlyPayment - intpayment) + float(principaldict[period])
@@ -83,7 +84,7 @@ def printtoscreen(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment
         period = period + 1
 
     #generate totals
-    print "Totals \t %10.2f \t %10.2f \t %10.2f" % (totalPayment, totalPrincipal, totalInterest)
+    print(f"Totals \t {totalPayment:10.2f} \t {totalPrincipal:10.2f} \t {totalInterest:10.2f}")
 
 def makecsv(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment):
     #create itereable
@@ -165,4 +166,4 @@ if arguments[0] == '-csv':
 elif arguments[0] == '-screen':
     printtoscreen(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment)
 else:
-    print USAGE
+    print(USAGE)
