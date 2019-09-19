@@ -128,7 +128,7 @@ def output(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment,destin
         print(f"Totals \t {totalPayment:10.2f} \t {totalPrincipal:10.2f} \t {totalInterest:10.2f}")
     elif destination == "csv":
         csvfinal.append([None,totalPayment, totalPrincipal, totalInterest])
-        writer = csv.writer(open("amort.csv", "wb"))
+        writer = csv.writer(open("amort.csv", "w"))
         writer.writerows(csvfinal)
 
 def main():
@@ -142,7 +142,7 @@ def main():
     #####################################################
 
     if arguments[0] == '-csv':
-        makecsv(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment)
+        output(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment,"csv")
     elif arguments[0] == '-screen':
         output(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment,"screen")
     else:
