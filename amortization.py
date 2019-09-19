@@ -54,6 +54,26 @@ def titles(P,i,MonthlyPayment,destination):
     else:
         print("will have csv code here")
 
+def extraprincialdict(n):
+    """Read in the extra principal text file and return a dictionary with the values."""
+    extra = []
+    count = 0
+    f = open('extraprincipal','r')
+    for line in f:
+        if "#" not in line:
+            extra.append(line)
+            count = count + 1
+    f.close()
+
+    for number in range(0,n-count):
+        extra.append(0)
+
+    dictkey = range(1,361)
+
+    dictitems = zip(dictkey,extra)
+
+    return dict(dictitems)
+
 def calculate(P,i,n,MonthlyPayment,totalPrincipal,totalInterest, totalPayment,destination):
     """This will make the calculation and print to screen or CSV"""
     pass
@@ -62,6 +82,9 @@ def output(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment,destin
     
     #generate titles
     titles(P,i,MonthlyPayment,destination)
+    
+    #read in extra principal data
+    principaldict = extraprincialdict(n)
     
     period = 1
     
@@ -140,40 +163,22 @@ def makecsv(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment):
     writer = csv.writer(open("amort.csv", "wb"))
     writer.writerows(csvfinal)
 
+def main():
+    arguments = getargs()
+    ##################setup variables#####################
+    P=int(arguments[2])
+    i=float(arguments[4])/12
+    n=int(arguments[6])
+    MonthlyPayment = (P*i)/(1-pow((1+i),-n))
+    (totalPrincipal,totalInterest,totalPayment) = (0,0,0)
+    #####################################################
 
-arguments = getargs()
-##################setup variables#####################
-P=int(arguments[2])
-i=float(arguments[4])/12
-n=int(arguments[6])
-MonthlyPayment = (P*i)/(1-pow((1+i),-n))
-(totalPrincipal,totalInterest,totalPayment) = (0,0,0)
-#####################################################
-
-
-##read in the extra principal amounts###
-extra = []
-count = 0
-f = open('extraprincipal','r')
-for line in f:
-    if "#" not in line:
-        extra.append(line)
-        count = count + 1
-f.close()
-
-for number in range(0,n-count):
-    extra.append(0)
-
-dictkey = range(1,361)
-
-dictitems = zip(dictkey,extra)
-
-principaldict = dict(dictitems)
-####################################
-
-if arguments[0] == '-csv':
-    makecsv(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment)
-elif arguments[0] == '-screen':
-    output(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment,"screen")
-else:
-    print(USAGE)
+    if arguments[0] == '-csv':
+        makecsv(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment)
+    elif arguments[0] == '-screen':
+        output(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment,"screen")
+    else:
+        print(USAGE)
+        
+if __name__ == "__main__":
+    main()
