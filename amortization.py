@@ -52,7 +52,7 @@ def titles(P,i,MonthlyPayment,destination):
         print(f"Payment: {MonthlyPayment:10.2f}")
         print("\t Payment \t Principal \t Interest \t Extra Principal  Balance")
     else:
-        print("will have csv code here")
+        return [None, "Payment","Principal","Interest","Extra Principal", "Balance"]
 
 def extraprincialdict(n):
     """Read in the extra principal text file and return a dictionary with the values."""
@@ -80,11 +80,20 @@ def calculate(P,i,n,MonthlyPayment,totalPrincipal,totalInterest, totalPayment,de
 
 def output(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment,destination):
     
+    csvfinal = []
+    csvthisime = []
+    
     #generate titles
-    titles(P,i,MonthlyPayment,destination)
+    if destination == "csv":
+        csvfinal.append(titles(P,i,MonthlyPayment,destination))
+    else:    
+        titles(P,i,MonthlyPayment,destination)
+    
     
     #read in extra principal data
     principaldict = extraprincialdict(n)
+    
+    
     
     period = 1
     
