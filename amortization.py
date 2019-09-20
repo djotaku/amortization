@@ -1,10 +1,11 @@
 __author__ = "Eric Mesa"
-__version__ = "v2.2"
+__version__ = "v3.0"
 __license__ = "GNU GPL v3.0"
 __copyright__ = "(c) 2010-2019 Eric Mesa"
 __email__ = "ericsbinaryworld at gmail dot com"
 
-import csv,sys
+import csv
+import sys
 
 USAGE = """
     Usage:
@@ -36,64 +37,58 @@ def getargs():
     try:
         args = sys.argv[1:]
     except:
-        print USAGE
+        print(USAGE)
     if len(args) < 7:
         sys.exit(USAGE)
     return args
 
 
-def printtoscreen(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment):
+#helper functions
+def titles(P,i,MonthlyPayment,destination):
+    """ Print titles to screen or into CSV file. """
+    if destination == "screen":
+        print(f"Loan Amount: {P}")
+        print(f"Annual Interest: {i*12*100}")
+        print(f"Payment: {MonthlyPayment:10.2f}")
+        print("\t Payment \t Principal \t Interest \t Extra Principal  Balance")
+    else:
+        return [None, "Payment","Principal","Interest","Extra Principal", "Balance"]
 
-    print "Loan Amount:", P
-    print "Annual Interest:",  i*12*100
-    print "Payment: %10.2f\n" % MonthlyPayment
+def extraprincialdict(n):
+    """Read in the extra principal text file and return a dictionary with the values."""
+    extra = []
+    count = 0
+    f = open('extraprincipal','r')
+    for line in f:
+        if "#" not in line:
+            extra.append(line)
+            count = count + 1
+    f.close()
+
+    for number in range(0,n-count):
+        extra.append(0)
+
+    dictkey = range(1,361)
+
+    dictitems = zip(dictkey,extra)
+
+    return dict(dictitems)
+
+def output(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment,destination):
     
-    period = 1
-    #generate titles
-    print "\t Payment \t Principal \t Interest \t Extra Principal  Balance"
-
-    #generate amortization table
-    while period < n+1:
-        intpayment = (P*i)
-        if period == n:
-            MonthlyPayment = P + intpayment
-
-        
-
-        #this should handle finishing early because of extra interest payments
-        if P < MonthlyPayment:
-            MonthlyPayment = P + intpayment
-            P = P - (MonthlyPayment - intpayment) - float(principaldict[period])
-            print "%d \t %10.2f \t %10.2f \t %10.2f \t %10.2f \t %10.2f"% (period, MonthlyPayment, MonthlyPayment-intpayment, intpayment, float(principaldict[period]),P)
-            #this should handle to totals being slightly off by amount of last payment
-            totalPrincipal = totalPrincipal + (MonthlyPayment - intpayment) + float(principaldict[period])
-            totalInterest = totalInterest + intpayment
-            totalPayment = totalPayment + MonthlyPayment + float(principaldict[period])
-            break
-
-        P = P - (MonthlyPayment - intpayment) - float(principaldict[period])
-
-        print "%d \t %10.2f \t %10.2f \t %10.2f \t %10.2f \t %10.2f"% (period, MonthlyPayment, MonthlyPayment-intpayment, intpayment, float(principaldict[period]),P) 
-        
-        #total stuff
-        totalPrincipal = totalPrincipal + (MonthlyPayment - intpayment) + float(principaldict[period])
-        totalInterest = totalInterest + intpayment
-        totalPayment = totalPayment + MonthlyPayment + float(principaldict[period])
-        
-        period = period + 1
-
-    #generate totals
-    print "Totals \t %10.2f \t %10.2f \t %10.2f" % (totalPayment, totalPrincipal, totalInterest)
-
-def makecsv(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment):
-    #create itereable
     csvfinal = []
     csvthisime = []
-    period = 1
     
     #generate titles
-    csvthistime = [None, "Payment","Principal","Interest","Extra Principal", "Balance"]
-    csvfinal.append(csvthistime)
+    if destination == "csv":
+        csvfinal.append(titles(P,i,MonthlyPayment,destination))
+    elif destination == "screen":    
+        titles(P,i,MonthlyPayment,destination)
+    
+    #read in extra principal data
+    principaldict = extraprincialdict(n)
+    
+    period = 1
     
     #generate amortization table
     while period < n+1:
@@ -105,7 +100,10 @@ def makecsv(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment):
         if P < MonthlyPayment:
             MonthlyPayment = P + intpayment
             P = P - (MonthlyPayment - intpayment) - float(principaldict[period])
-            csvfinal.append([period, MonthlyPayment, MonthlyPayment-intpayment, intpayment, float(principaldict[period]),P])
+            if destination == "screen":
+                print(f"{period:d} \t {MonthlyPayment:10.2f} \t {MonthlyPayment-intpayment:10.2f} \t {intpayment:10.2f} \t {float(principaldict[period]):10.2f} \t {P:10.2f}")
+            elif destination == "csv":
+                csvfinal.append([period, MonthlyPayment, MonthlyPayment-intpayment, intpayment, float(principaldict[period]),P])
             #this should handle to totals being slightly off by amount of last payment
             totalPrincipal = totalPrincipal + (MonthlyPayment - intpayment) + float(principaldict[period])
             totalInterest = totalInterest + intpayment
@@ -114,55 +112,41 @@ def makecsv(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment):
 
         P = P - (MonthlyPayment - intpayment) - float(principaldict[period])
 
-        csvfinal.append([period, MonthlyPayment, MonthlyPayment-intpayment, intpayment, float(principaldict[period]),P]) 
-
+        if destination == "screen":
+            print(f"{period:d} \t {MonthlyPayment:10.2f} \t {MonthlyPayment-intpayment:10.2f} \t {intpayment:10.2f} \t {float(principaldict[period]):10.2f} \t {P:10.2f}") 
+        elif destination == "csv":
+            csvfinal.append([period, MonthlyPayment, MonthlyPayment-intpayment, intpayment, float(principaldict[period]),P])
         #total stuff
         totalPrincipal = totalPrincipal + (MonthlyPayment - intpayment) + float(principaldict[period])
         totalInterest = totalInterest + intpayment
         totalPayment = totalPayment + MonthlyPayment + float(principaldict[period])
-
-        period = period + 1
         
+        period = period + 1
+
     #generate totals
-    csvfinal.append([None,totalPayment, totalPrincipal, totalInterest]) #not correct in CSV, correct when printed on screen
+    if destination == "screen":
+        print(f"Totals \t {totalPayment:10.2f} \t {totalPrincipal:10.2f} \t {totalInterest:10.2f}")
+    elif destination == "csv":
+        csvfinal.append([None,totalPayment, totalPrincipal, totalInterest])
+        writer = csv.writer(open("amort.csv", "w"))
+        writer.writerows(csvfinal)
 
-    writer = csv.writer(open("amort.csv", "wb"))
-    writer.writerows(csvfinal)
+def main():
+    arguments = getargs()
+    ##################setup variables#####################
+    P=int(arguments[2])
+    i=float(arguments[4])/12
+    n=int(arguments[6])
+    MonthlyPayment = (P*i)/(1-pow((1+i),-n))
+    (totalPrincipal,totalInterest,totalPayment) = (0,0,0)
+    #####################################################
 
-
-arguments = getargs()
-##################setup variables#####################
-P=int(arguments[2])
-i=float(arguments[4])/12
-n=int(arguments[6])
-MonthlyPayment = (P*i)/(1-pow((1+i),-n))
-(totalPrincipal,totalInterest,totalPayment) = (0,0,0)
-#####################################################
-
-
-##read in the extra principal amounts###
-extra = []
-count = 0
-f = open('extraprincipal','r')
-for line in f:
-    if "#" not in line:
-        extra.append(line)
-        count = count + 1
-f.close()
-
-for number in range(0,n-count):
-    extra.append(0)
-
-dictkey = range(1,361)
-
-dictitems = zip(dictkey,extra)
-
-principaldict = dict(dictitems)
-####################################
-
-if arguments[0] == '-csv':
-    makecsv(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment)
-elif arguments[0] == '-screen':
-    printtoscreen(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment)
-else:
-    print USAGE
+    if arguments[0] == '-csv':
+        output(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment,"csv")
+    elif arguments[0] == '-screen':
+        output(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment,"screen")
+    else:
+        print(USAGE)
+        
+if __name__ == "__main__":
+    main()
