@@ -61,7 +61,7 @@ def titles(P,i,MonthlyPayment,destination):
         print(f"Payment: {MonthlyPayment:10.2f}")
         print("\t Payment \t Principal \t Interest \t Extra Principal  Balance")
     else:
-        return [None, "Payment","Principal","Interest","Extra Principal", "Balance"]
+        return [None, "Payment", "Principal", "Interest", "Extra Principal", "Balance"]
 
 def extraprincialdict(n):
     """Read in the extra principal text file and return a dictionary with the values."""
@@ -83,7 +83,7 @@ def extraprincialdict(n):
 
     return dict(dictitems)
 
-def output(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment,destination):
+def output(P, i, n, MonthlyPayment, totalPrincipal, totalInterest, totalPayment, destination):
     
     csvfinal = []
     csvthisime = []
@@ -91,9 +91,9 @@ def output(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment,destin
     
     #generate titles
     if destination == "csv":
-        csvfinal.append(titles(P,i,MonthlyPayment,destination))
+        csvfinal.append(titles(P, i, MonthlyPayment, destination))
     elif destination == "screen":    
-        titles(P,i,MonthlyPayment,destination)
+        titles(P, i, MonthlyPayment, destination)
     
     #read in extra principal data
     principaldict = extraprincialdict(n)
@@ -136,12 +136,12 @@ def output(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment,destin
     #generate totals
     if destination == "screen":
         print(f"Totals \t {totalPayment:10.2f} \t {totalPrincipal:10.2f} \t {totalInterest:10.2f}")
-        (noextratotalInterest, noextratotalPrincipal) = nopayamort(originalPrincipal,i,n)
+        (noextratotalInterest, noextratotalPrincipal) = nopayamort(originalPrincipal, i, n)
         print(f"Saved ${noextratotalInterest-totalInterest:.2f} in interest payments")
     elif destination == "csv":
         csvfinal.append([None,totalPayment, totalPrincipal, totalInterest])
-        (noextratotalInterest, noextratotalPrincipal) = nopayamort(originalPrincipal,i,n)
-        csvfinal.append(["Saved",noextratotalInterest-totalInterest,"in interest payments",None])
+        (noextratotalInterest, noextratotalPrincipal) = nopayamort(originalPrincipal, i, n)
+        csvfinal.append(["Saved", noextratotalInterest-totalInterest, "in interest payments", None])
         writer = csv.writer(open("amort.csv", "w"))
         writer.writerows(csvfinal)
 
@@ -151,8 +151,8 @@ def main():
     P=int(arguments[2])
     i=float(arguments[4])/12
     n=int(arguments[6])
-    MonthlyPayment = (P*i)/(1-pow((1+i),-n))
-    (totalPrincipal,totalInterest,totalPayment) = (0, 0, 0)
+    MonthlyPayment = (P*i)/(1-pow((1+i), -n))
+    (totalPrincipal, totalInterest, totalPayment) = (0, 0, 0)
     #####################################################
 
     if arguments[0] == '-csv':
