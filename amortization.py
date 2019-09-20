@@ -54,18 +54,18 @@ def getargs():
 
 
 #helper functions
-def nopayamort(Principal, interest, months):
+def nopayamort(principal, interest, months):
     """Calculate total interest paid if no extra principal payments made."""
     per = np.arange(1*months)+1
-    ipmt = np.ipmt(interest, per, 1*months, Principal)
-    totalInterest = abs(np.sum(ipmt))
-    return totalInterest
+    ipmt = np.ipmt(interest, per, 1*months, principal)
+    total_interest = abs(np.sum(ipmt))
+    return total_interest
 
-def titles(P, i, MonthlyPayment):
+def titles(principal, i, monthly_payment):
     """Print titles to screen or into CSV file."""
-    print(f"Loan Amount: {P}")
+    print(f"Loan Amount: {principal}")
     print(f"Annual Interest: {i*12*100}")
-    print(f"Payment: {MonthlyPayment:10.2f}")
+    print(f"Payment: {monthly_payment:10.2f}")
     print("\t Payment \t Principal \t Interest \t Extra Principal  Balance")
 
 def extraprincialdict(n):
