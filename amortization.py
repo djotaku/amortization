@@ -37,6 +37,7 @@ USAGE = """
     would be 0 extra principal the first month, 200 extra the second month, etc
     """
 
+#helper functions
 def getargs():
     """Grab the commandline arguments.
 
@@ -47,8 +48,6 @@ def getargs():
         sys.exit(USAGE)
     return args
 
-
-#helper functions
 def nopayamort(principal, interest, months):
     """Calculate total interest paid if no extra principal payments made."""
     per = np.arange(1*months)+1
@@ -73,7 +72,7 @@ def extraprincialdict(number_of_payments):
             extra.append(line)
             count = count + 1
     extraprincipal_file.close()
-
+    
     for number in range(0, number_of_payments-count):
         extra.append(0)
 
