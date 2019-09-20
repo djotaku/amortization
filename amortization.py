@@ -151,7 +151,8 @@ def output(principal, i, number_of_payments, monthly_payment, destination):
 
     #generate totals
     if destination == "screen":
-        print(f"Totals \t {total_payment:10.2f} \t {total_principal:10.2f} \t {total_interest:10.2f}")
+        print(f"Totals \t {total_payment:10.2f} \t {total_principal:10.2f} \t \
+            {total_interest:10.2f}")
         print(f"Saved ${no_extra_total_interest-total_interest:.2f} in interest payments")
     elif destination == "csv":
         csvfinal.append([None, total_payment, total_principal, total_interest])
