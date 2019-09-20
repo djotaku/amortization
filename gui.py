@@ -49,7 +49,10 @@ class Ui_Dialog(object):
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        self.lineEditInterest.setPlaceholderText(_translate("Dialog", "0.0444"))
+        self.lineEditMonth.setPlaceholderText(_translate("Dialog", "360"))
         self.pushButtonCalculate.setText(_translate("Dialog", "Calculate"))
+        self.lineEditPrinciple.setPlaceholderText(_translate("Dialog", "270000"))
         self.label_2.setText(_translate("Dialog", "Interest"))
         self.label.setText(_translate("Dialog", "Principle"))
         self.label_3.setText(_translate("Dialog", "Number of Months"))
