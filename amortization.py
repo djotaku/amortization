@@ -151,12 +151,12 @@ def output(principal, i, n, MonthlyPayment, totalPrincipal, totalInterest,
     #generate totals
     if destination == "screen":
         print(f"Totals \t {totalPayment:10.2f} \t {totalPrincipal:10.2f} \t {totalInterest:10.2f}")
-        noextratotalInterest = nopayamort(originalPrincipal, i, n)
-        print(f"Saved ${noextratotalInterest-totalInterest:.2f} in interest payments")
+        no_extra_total_interest = nopayamort(originalPrincipal, i, n)
+        print(f"Saved ${no_extra_total_interest-totalInterest:.2f} in interest payments")
     elif destination == "csv":
         csvfinal.append([None, totalPayment, totalPrincipal, totalInterest])
-        noextratotalInterest = nopayamort(originalPrincipal, i, n)
-        csvfinal.append(["Saved", noextratotalInterest-totalInterest, "in interest payments", None])
+        no_extra_total_interest = nopayamort(originalPrincipal, i, n)
+        csvfinal.append(["Saved", no_extra_total_interest-totalInterest, "in interest payments", None])
         writer = csv.writer(open("amort.csv", "w"))
         writer.writerows(csvfinal)
 
@@ -164,17 +164,19 @@ def main():
     """Grab the arguments and run the program."""
     arguments = getargs()
     ##################setup variables#####################
-    P = int(arguments[2])
+    principal = int(arguments[2])
     i = float(arguments[4])/12
-    n = int(arguments[6])
-    MonthlyPayment = (P*i)/(1-pow((1+i), -n))
-    (totalPrincipal, totalInterest, totalPayment) = (0, 0, 0)
+    number_of_payments = int(arguments[6])
+    monthly_payment = (principal*i)/(1-pow((1+i), -number_of_payments))
+    (total_principal, total_interest, total_payment) = (0, 0, 0)
     #####################################################
 
     if arguments[0] == '-csv':
-        output(P, i, n, MonthlyPayment, totalPrincipal, totalInterest, totalPayment, "csv")
+        output(principal, i, number_of_payments, monthly_payment, total_principal, total_interest,
+               total_payment, "csv")
     elif arguments[0] == '-screen':
-        output(P, i, n, MonthlyPayment, totalPrincipal, totalInterest, totalPayment, "screen")
+        output(principal, i, number_of_payments, monthly_payment, total_principal, total_interest,
+               total_payment, "screen")
     else:
         print(USAGE)
 
