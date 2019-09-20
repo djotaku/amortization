@@ -6,6 +6,7 @@ __email__ = "ericsbinaryworld at gmail dot com"
 
 import csv
 import sys
+import numpy as np
 
 USAGE = """
     Usage:
@@ -44,6 +45,14 @@ def getargs():
 
 
 #helper functions
+def nopayamort(Principal, interest, months):
+    per = np.arange(1*months)+1
+    ipmt = np.ipmt(interest,per,1*months,Principal)
+    ppmt = np.ppmt(interest,per,1*months,Principal)
+    totalInterest = abs(np.sum(ipmt))
+    totalPrincipal = abs(np.sum(ppmt))
+    return (totalInterest, totalPrincipal)
+    
 def titles(P,i,MonthlyPayment,destination):
     """ Print titles to screen or into CSV file. """
     if destination == "screen":
@@ -78,6 +87,7 @@ def output(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment,destin
     
     csvfinal = []
     csvthisime = []
+    originalPrincipal = P
     
     #generate titles
     if destination == "csv":
@@ -126,8 +136,12 @@ def output(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment,destin
     #generate totals
     if destination == "screen":
         print(f"Totals \t {totalPayment:10.2f} \t {totalPrincipal:10.2f} \t {totalInterest:10.2f}")
+        (noextratotalInterest, noextratotalPrincipal) = nopayamort(originalPrincipal,i,n)
+        print(f"Saved ${noextratotalInterest-totalInterest:.2f} in interest payments")
     elif destination == "csv":
         csvfinal.append([None,totalPayment, totalPrincipal, totalInterest])
+        (noextratotalInterest, noextratotalPrincipal) = nopayamort(originalPrincipal,i,n)
+        csvfinal.append(["Saved",noextratotalInterest-totalInterest,"in interest payments",None])
         writer = csv.writer(open("amort.csv", "w"))
         writer.writerows(csvfinal)
 
