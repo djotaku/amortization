@@ -68,18 +68,18 @@ def titles(principal, i, monthly_payment):
     print(f"Payment: {monthly_payment:10.2f}")
     print("\t Payment \t Principal \t Interest \t Extra Principal  Balance")
 
-def extraprincialdict(n):
+def extraprincialdict(number_of_payments):
     """Read in the extra principal text file and return a dictionary with the values."""
     extra = []
     count = 0
-    f = open('extraprincipal', 'r')
-    for line in f:
+    extraprincipal_file = open('extraprincipal', 'r')
+    for line in extraprincipal_file:
         if "#" not in line:
             extra.append(line)
             count = count + 1
-    f.close()
+    extraprincipal_file.close()
 
-    for number in range(0, n-count):
+    for number in range(0, number_of_payments-count):
         extra.append(0)
 
     dictkey = range(1, 361)
@@ -88,17 +88,18 @@ def extraprincialdict(n):
 
     return dict(dictitems)
 
-def output(P, i, n, MonthlyPayment, totalPrincipal, totalInterest, totalPayment, destination):
+def output(principal, i, n, MonthlyPayment, totalPrincipal, totalInterest,
+           totalPayment, destination):
     """Create the amortization table and outputs to CSV or screen."""
     csvfinal = []
-    originalPrincipal = P
+    originalPrincipal = principal
 
     #generate titles
     if destination == "csv":
         csvfinal.append([None, "Payment", "Principal", "Interest",
                          "Extra Principal", "Balance"])
     elif destination == "screen":
-        titles(P, i, MonthlyPayment)
+        titles(principal, i, MonthlyPayment)
 
     #read in extra principal data
     principaldict = extraprincialdict(n)
@@ -107,22 +108,22 @@ def output(P, i, n, MonthlyPayment, totalPrincipal, totalInterest, totalPayment,
 
     #generate amortization table
     while period < n+1:
-        intpayment = (P*i)
+        intpayment = (principal*i)
         if period == n:
-            MonthlyPayment = P + intpayment
+            MonthlyPayment = principal + intpayment
 
         #this should handle finishing early because of extra interest payments
-        if P < MonthlyPayment:
-            MonthlyPayment = P + intpayment
-            P = P - (MonthlyPayment - intpayment) - float(principaldict[period])
+        if principal < MonthlyPayment:
+            MonthlyPayment = principal + intpayment
+            principal = principal - (MonthlyPayment - intpayment) - float(principaldict[period])
             if destination == "screen":
                 print(f"{period:d} \t {MonthlyPayment:10.2f} \t \
                     {MonthlyPayment-intpayment:10.2f} \t {intpayment:10.2f} \t\
-                        {float(principaldict[period]):10.2f} \t {P:10.2f}")
+                        {float(principaldict[period]):10.2f} \t {principal:10.2f}")
             elif destination == "csv":
                 csvfinal.append([period, MonthlyPayment,
                                  MonthlyPayment-intpayment, intpayment,
-                                 float(principaldict[period]), P])
+                                 float(principaldict[period]), principal])
             #this should handle to totals being slightly off by amount of last payment
             totalPrincipal = totalPrincipal + (MonthlyPayment - intpayment)
             + float(principaldict[period])
@@ -130,15 +131,15 @@ def output(P, i, n, MonthlyPayment, totalPrincipal, totalInterest, totalPayment,
             totalPayment = totalPayment + MonthlyPayment + float(principaldict[period])
             break
 
-        P = P - (MonthlyPayment - intpayment) - float(principaldict[period])
+        principal = principal - (MonthlyPayment - intpayment) - float(principaldict[period])
 
         if destination == "screen":
             print(f"{period:d} \t {MonthlyPayment:10.2f} \t \
                   {MonthlyPayment-intpayment:10.2f} \t {intpayment:10.2f} \t \
-                  {float(principaldict[period]):10.2f} \t {P:10.2f}")
+                  {float(principaldict[period]):10.2f} \t {principal:10.2f}")
         elif destination == "csv":
             csvfinal.append([period, MonthlyPayment, MonthlyPayment-intpayment,
-                             intpayment, float(principaldict[period]), P])
+                             intpayment, float(principaldict[period]), principal])
         #total stuff
         totalPrincipal = totalPrincipal + (MonthlyPayment - intpayment)
         + float(principaldict[period])
