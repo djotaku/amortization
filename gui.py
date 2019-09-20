@@ -13,6 +13,9 @@ class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(731, 488)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("../../ericface.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        Dialog.setWindowIcon(icon)
         self.gridLayoutWidget = QtWidgets.QWidget(Dialog)
         self.gridLayoutWidget.setGeometry(QtCore.QRect(10, 30, 716, 421))
         self.gridLayoutWidget.setObjectName("gridLayoutWidget")
@@ -44,6 +47,7 @@ class Ui_Dialog(object):
         self.label_3.setObjectName("label_3")
         self.gridLayout.addWidget(self.label_3, 0, 4, 1, 1)
         self.tableViewCSV = QtWidgets.QTableView(self.gridLayoutWidget)
+        self.tableViewCSV.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.tableViewCSV.setObjectName("tableViewCSV")
         self.gridLayout.addWidget(self.tableViewCSV, 2, 0, 2, 6)
 
@@ -61,5 +65,6 @@ class Ui_Dialog(object):
         self.label.setText(_translate("Dialog", "Principle"))
         self.pushButtonCalculate.setText(_translate("Dialog", "Calculate"))
         self.label_3.setText(_translate("Dialog", "Number of Months"))
+        self.tableViewCSV.setToolTip(_translate("Dialog", "amort table will appear here"))
 
 

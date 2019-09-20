@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Amortization</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../../ericface.png</normaloff>../../ericface.png</iconset>
+  </property>
   <widget class="QWidget" name="gridLayoutWidget">
    <property name="geometry">
     <rect>
@@ -92,7 +96,14 @@
      </widget>
     </item>
     <item row="2" column="0" rowspan="2" colspan="6">
-     <widget class="QTableView" name="tableViewCSV"/>
+     <widget class="QTableView" name="tableViewCSV">
+      <property name="toolTip">
+       <string>amort table will appear here</string>
+      </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
