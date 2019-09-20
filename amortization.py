@@ -88,18 +88,18 @@ def extraprincialdict(number_of_payments):
 
     return dict(dictitems)
 
-def output(principal, i, n, MonthlyPayment, totalPrincipal, totalInterest,
-           totalPayment, destination):
+def output(principal, i, n, monthly_payment, total_principal, total_interest,
+           total_payment, destination):
     """Create the amortization table and outputs to CSV or screen."""
     csvfinal = []
-    originalPrincipal = principal
+    original_principal = principal
 
     #generate titles
     if destination == "csv":
         csvfinal.append([None, "Payment", "Principal", "Interest",
                          "Extra Principal", "Balance"])
     elif destination == "screen":
-        titles(principal, i, MonthlyPayment)
+        titles(principal, i, monthly_payment)
 
     #read in extra principal data
     principaldict = extraprincialdict(n)
@@ -109,54 +109,56 @@ def output(principal, i, n, MonthlyPayment, totalPrincipal, totalInterest,
     #generate amortization table
     while period < n+1:
         intpayment = (principal*i)
+        extra_principal_this_period = float(principaldict[period])
         if period == n:
-            MonthlyPayment = principal + intpayment
+            monthly_payment = principal + intpayment
 
         #this should handle finishing early because of extra interest payments
-        if principal < MonthlyPayment:
-            MonthlyPayment = principal + intpayment
-            principal = principal - (MonthlyPayment - intpayment) - float(principaldict[period])
+        if principal < monthly_payment:
+            monthly_payment = principal + intpayment
+            principal = principal - (monthly_payment - intpayment) - extra_principal_this_period
             if destination == "screen":
-                print(f"{period:d} \t {MonthlyPayment:10.2f} \t \
-                    {MonthlyPayment-intpayment:10.2f} \t {intpayment:10.2f} \t\
-                        {float(principaldict[period]):10.2f} \t {principal:10.2f}")
+                print(f"{period:d} \t {monthly_payment:10.2f} \t \
+                    {monthly_payment-intpayment:10.2f} \t {intpayment:10.2f} \t\
+                        {extra_principal_this_period:10.2f} \t {principal:10.2f}")
             elif destination == "csv":
-                csvfinal.append([period, MonthlyPayment,
-                                 MonthlyPayment-intpayment, intpayment,
-                                 float(principaldict[period]), principal])
+                csvfinal.append([period, monthly_payment,
+                                 monthly_payment-intpayment, intpayment,
+                                 extra_principal_this_period, principal])
             #this should handle to totals being slightly off by amount of last payment
-            totalPrincipal = totalPrincipal + (MonthlyPayment - intpayment)
-            + float(principaldict[period])
-            totalInterest = totalInterest + intpayment
-            totalPayment = totalPayment + MonthlyPayment + float(principaldict[period])
+            total_principal = total_principal + (monthly_payment - intpayment)\
+            + extra_principal_this_period
+            total_interest = total_interest + intpayment
+            total_payment = total_payment + monthly_payment + extra_principal_this_period
             break
 
-        principal = principal - (MonthlyPayment - intpayment) - float(principaldict[period])
+        principal = principal - (monthly_payment - intpayment) - extra_principal_this_period
 
         if destination == "screen":
-            print(f"{period:d} \t {MonthlyPayment:10.2f} \t \
-                  {MonthlyPayment-intpayment:10.2f} \t {intpayment:10.2f} \t \
-                  {float(principaldict[period]):10.2f} \t {principal:10.2f}")
+            print(f"{period:d} \t {monthly_payment:10.2f} \t \
+                  {monthly_payment-intpayment:10.2f} \t {intpayment:10.2f} \t \
+                  {extra_principal_this_period:10.2f} \t {principal:10.2f}")
         elif destination == "csv":
-            csvfinal.append([period, MonthlyPayment, MonthlyPayment-intpayment,
-                             intpayment, float(principaldict[period]), principal])
+            csvfinal.append([period, monthly_payment, monthly_payment-intpayment,
+                             intpayment, extra_principal_this_period, principal])
         #total stuff
-        totalPrincipal = totalPrincipal + (MonthlyPayment - intpayment)
-        + float(principaldict[period])
-        totalInterest = totalInterest + intpayment
-        totalPayment = totalPayment + MonthlyPayment + float(principaldict[period])
+        total_principal = total_principal + (monthly_payment - intpayment)\
+        + extra_principal_this_period
+        total_interest = total_interest + intpayment
+        total_payment = total_payment + monthly_payment + extra_principal_this_period
 
         period = period + 1
 
     #generate totals
     if destination == "screen":
-        print(f"Totals \t {totalPayment:10.2f} \t {totalPrincipal:10.2f} \t {totalInterest:10.2f}")
-        no_extra_total_interest = nopayamort(originalPrincipal, i, n)
-        print(f"Saved ${no_extra_total_interest-totalInterest:.2f} in interest payments")
+        print(f"Totals \t {total_payment:10.2f} \t {total_principal:10.2f} \t {total_interest:10.2f}")
+        no_extra_total_interest = nopayamort(original_principal, i, n)
+        print(f"Saved ${no_extra_total_interest-total_interest:.2f} in interest payments")
     elif destination == "csv":
-        csvfinal.append([None, totalPayment, totalPrincipal, totalInterest])
-        no_extra_total_interest = nopayamort(originalPrincipal, i, n)
-        csvfinal.append(["Saved", no_extra_total_interest-totalInterest, "in interest payments", None])
+        csvfinal.append([None, total_payment, total_principal, total_interest])
+        no_extra_total_interest = nopayamort(original_principal, i, n)
+        csvfinal.append(["Saved", no_extra_total_interest-total_interest,
+                         "in interest payments", None])
         writer = csv.writer(open("amort.csv", "w"))
         writer.writerows(csvfinal)
 
