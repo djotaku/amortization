@@ -72,9 +72,11 @@ def extraprincialdict(number_of_payments):
             extra.append(line)
             count = count + 1
     extraprincipal_file.close()
-    
-    for number in range(0, number_of_payments-count):
+
+    line = 0
+    while line < number_of_payments-count:
         extra.append(0)
+        line = line + 1
 
     dictkey = range(1, 361)
 
