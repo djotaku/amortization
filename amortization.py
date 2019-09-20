@@ -120,7 +120,7 @@ def output(principal, i, number_of_payments, monthly_payment, destination):
                             \t ${extra_principal_this_period:,.2f}\
                                 \t ${principal:,.2f}")
             elif destination == "csv":
-                csvfinal.append([period, monthly_payment,
+                csvfinal.append([period, f"${monthly_payment:,.2f}",
                                  monthly_payment-intpayment, intpayment,
                                  extra_principal_this_period, principal])
             #this should handle to totals being slightly off by amount of last payment
@@ -139,8 +139,11 @@ def output(principal, i, number_of_payments, monthly_payment, destination):
                         \t ${extra_principal_this_period:,.2f}\
                             \t ${principal:,.2f}")
         elif destination == "csv":
-            csvfinal.append([period, monthly_payment, monthly_payment-intpayment,
-                             intpayment, extra_principal_this_period, principal])
+            csvfinal.append([period, f"${monthly_payment:,.2f}", 
+                             f"${monthly_payment-intpayment:,.2f}",
+                             f"${intpayment:,.2f}",
+                             f"${extra_principal_this_period:,.2f}",
+                             f"${principal:,.2f}"])
         #total stuff
         total_principal = total_principal + (monthly_payment - intpayment)\
         + extra_principal_this_period
@@ -155,7 +158,8 @@ def output(principal, i, number_of_payments, monthly_payment, destination):
             \t ${total_interest:,.2f}")
         print(f"Saved ${no_extra_total_interest-total_interest:,.2f} in interest payments")
     elif destination == "csv":
-        csvfinal.append([None, f"${total_payment:,.2f}", f"${total_principal:,.2f}", f"${total_interest:,.2f}"])
+        csvfinal.append([None, f"${total_payment:,.2f}",
+                         f"${total_principal:,.2f}", f"${total_interest:,.2f}"])
         csvfinal.append(["Saved", f"${no_extra_total_interest-total_interest:,.2f}",
                          "in interest payments", None])
         writer = csv.writer(open("amort.csv", "w"))
