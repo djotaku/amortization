@@ -42,12 +42,7 @@ def getargs():
 
     Put them into a list and give help if no arguments provided.
     """
-    args = []
-
-    try:
-        args = sys.argv[1:]
-    except:
-        print(USAGE)
+    args = sys.argv[1:]
     if len(args) < 7:
         sys.exit(USAGE)
     return args
