@@ -114,9 +114,9 @@ def output(principal, i, number_of_payments, monthly_payment, destination):
             monthly_payment = principal + intpayment
             principal = principal - (monthly_payment - intpayment) - extra_principal_this_period
             if destination == "screen":
-                print(f"{period:d} \t {monthly_payment:10.2f} \t \
-                    {monthly_payment-intpayment:10.2f} \t {intpayment:10.2f} \t\
-                        {extra_principal_this_period:10.2f} \t {principal:10.2f}")
+                print(f"{period:d} \t {monthly_payment:,.2f} \t \
+                    {monthly_payment-intpayment:,.2f} \t {intpayment:,.2f} \t\
+                    {extra_principal_this_period:,.2f} \t {principal:,.2f}")
             elif destination == "csv":
                 csvfinal.append([period, monthly_payment,
                                  monthly_payment-intpayment, intpayment,
@@ -131,9 +131,9 @@ def output(principal, i, number_of_payments, monthly_payment, destination):
         principal = principal - (monthly_payment - intpayment) - extra_principal_this_period
 
         if destination == "screen":
-            print(f"{period:d} \t {monthly_payment:10.2f} \t \
-                  {monthly_payment-intpayment:10.2f} \t {intpayment:10.2f} \t \
-                  {extra_principal_this_period:10.2f} \t {principal:10.2f}")
+            print(f"{period:d} \t {monthly_payment:,.2f} \t \
+                  {monthly_payment-intpayment:,.2f} \t {intpayment:,.2f} \t \
+                  {extra_principal_this_period:,.2f} \t {principal:,.2f}")
         elif destination == "csv":
             csvfinal.append([period, monthly_payment, monthly_payment-intpayment,
                              intpayment, extra_principal_this_period, principal])
@@ -147,12 +147,12 @@ def output(principal, i, number_of_payments, monthly_payment, destination):
 
     #generate totals
     if destination == "screen":
-        print(f"Totals \t {total_payment:10.2f} \t {total_principal:10.2f} \t \
-            {total_interest:10.2f}")
-        print(f"Saved ${no_extra_total_interest-total_interest:.2f} in interest payments")
+        print(f"Totals \t {total_payment:,.2f} \t {total_principal:,.2f} \t \
+            {total_interest:,.2f}")
+        print(f"Saved ${no_extra_total_interest-total_interest:,.2f} in interest payments")
     elif destination == "csv":
         csvfinal.append([None, total_payment, total_principal, total_interest])
-        csvfinal.append(["Saved", no_extra_total_interest-total_interest,
+        csvfinal.append(["Saved", f"${no_extra_total_interest-total_interest:,.2f}",
                          "in interest payments", None])
         writer = csv.writer(open("amort.csv", "w"))
         writer.writerows(csvfinal)
