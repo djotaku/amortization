@@ -88,11 +88,11 @@ def extraprincialdict(number_of_payments):
 
     return dict(dictitems)
 
-def output(principal, i, n, monthly_payment, total_principal, total_interest,
-           total_payment, destination):
+def output(principal, i, number_of_payments, monthly_payment, destination):
     """Create the amortization table and outputs to CSV or screen."""
     csvfinal = []
-    original_principal = principal
+    no_extra_total_interest = nopayamort(principal, i, number_of_payments)
+    (total_principal, total_interest, total_payment) = (0, 0, 0)
 
     #generate titles
     if destination == "csv":
@@ -102,15 +102,15 @@ def output(principal, i, n, monthly_payment, total_principal, total_interest,
         titles(principal, i, monthly_payment)
 
     #read in extra principal data
-    principaldict = extraprincialdict(n)
+    principaldict = extraprincialdict(number_of_payments)
 
     period = 1
 
     #generate amortization table
-    while period < n+1:
+    while period < number_of_payments+1:
         intpayment = (principal*i)
         extra_principal_this_period = float(principaldict[period])
-        if period == n:
+        if period == number_of_payments:
             monthly_payment = principal + intpayment
 
         #this should handle finishing early because of extra interest payments
@@ -152,11 +152,9 @@ def output(principal, i, n, monthly_payment, total_principal, total_interest,
     #generate totals
     if destination == "screen":
         print(f"Totals \t {total_payment:10.2f} \t {total_principal:10.2f} \t {total_interest:10.2f}")
-        no_extra_total_interest = nopayamort(original_principal, i, n)
         print(f"Saved ${no_extra_total_interest-total_interest:.2f} in interest payments")
     elif destination == "csv":
         csvfinal.append([None, total_payment, total_principal, total_interest])
-        no_extra_total_interest = nopayamort(original_principal, i, n)
         csvfinal.append(["Saved", no_extra_total_interest-total_interest,
                          "in interest payments", None])
         writer = csv.writer(open("amort.csv", "w"))
@@ -170,15 +168,12 @@ def main():
     i = float(arguments[4])/12
     number_of_payments = int(arguments[6])
     monthly_payment = (principal*i)/(1-pow((1+i), -number_of_payments))
-    (total_principal, total_interest, total_payment) = (0, 0, 0)
     #####################################################
 
     if arguments[0] == '-csv':
-        output(principal, i, number_of_payments, monthly_payment, total_principal, total_interest,
-               total_payment, "csv")
+        output(principal, i, number_of_payments, monthly_payment, "csv")
     elif arguments[0] == '-screen':
-        output(principal, i, number_of_payments, monthly_payment, total_principal, total_interest,
-               total_payment, "screen")
+        output(principal, i, number_of_payments, monthly_payment, "screen")
     else:
         print(USAGE)
 
