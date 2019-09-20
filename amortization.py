@@ -1,3 +1,9 @@
+"""Calculates amortization table.
+
+Given a principal, interest rate, and loan length it prints it out to the
+screen or a CSV file.
+"""
+
 __author__ = "Eric Mesa"
 __version__ = "v2.9"
 __license__ = "GNU GPL v3.0"
@@ -32,8 +38,10 @@ USAGE = """
     """
 
 def getargs():
-    """Grab the commandline arguments and put them into a list.
-    Also give help if no arguments provided."""
+    """Grab the commandline arguments.
+
+    Put them into a list and give help if no arguments provided.
+    """
     args = []
 
     try:
@@ -47,22 +55,19 @@ def getargs():
 
 #helper functions
 def nopayamort(Principal, interest, months):
+    """Calculate total interest paid if no extra principal payments made."""
     per = np.arange(1*months)+1
     ipmt = np.ipmt(interest, per, 1*months, Principal)
     ppmt = np.ppmt(interest, per, 1*months, Principal)
     totalInterest = abs(np.sum(ipmt))
-    totalPrincipal = abs(np.sum(ppmt))
-    return (totalInterest, totalPrincipal)
+    return totalInterest
 
-def titles(P, i, MonthlyPayment, destination):
-    """ Print titles to screen or into CSV file. """
-    if destination == "screen":
-        print(f"Loan Amount: {P}")
-        print(f"Annual Interest: {i*12*100}")
-        print(f"Payment: {MonthlyPayment:10.2f}")
-        print("\t Payment \t Principal \t Interest \t Extra Principal  Balance")
-    else:
-        return [None, "Payment", "Principal", "Interest", "Extra Principal", "Balance"]
+def titles(P, i, MonthlyPayment):
+    """Print titles to screen or into CSV file."""
+    print(f"Loan Amount: {P}")
+    print(f"Annual Interest: {i*12*100}")
+    print(f"Payment: {MonthlyPayment:10.2f}")
+    print("\t Payment \t Principal \t Interest \t Extra Principal  Balance")
 
 def extraprincialdict(n):
     """Read in the extra principal text file and return a dictionary with the values."""
@@ -85,16 +90,16 @@ def extraprincialdict(n):
     return dict(dictitems)
 
 def output(P, i, n, MonthlyPayment, totalPrincipal, totalInterest, totalPayment, destination):
-
+    """Create the amortization table and outputs to CSV or screen."""
     csvfinal = []
-    csvthisime = []
     originalPrincipal = P
 
     #generate titles
     if destination == "csv":
-        csvfinal.append(titles(P, i, MonthlyPayment, destination))
+        csvfinal.append([None, "Payment", "Principal", "Interest",
+                         "Extra Principal", "Balance"])
     elif destination == "screen":
-        titles(P, i, MonthlyPayment, destination)
+        titles(P, i, MonthlyPayment)
 
     #read in extra principal data
     principaldict = extraprincialdict(n)
@@ -146,16 +151,17 @@ def output(P, i, n, MonthlyPayment, totalPrincipal, totalInterest, totalPayment,
     #generate totals
     if destination == "screen":
         print(f"Totals \t {totalPayment:10.2f} \t {totalPrincipal:10.2f} \t {totalInterest:10.2f}")
-        (noextratotalInterest, noextratotalPrincipal) = nopayamort(originalPrincipal, i, n)
+        noextratotalInterest = nopayamort(originalPrincipal, i, n)
         print(f"Saved ${noextratotalInterest-totalInterest:.2f} in interest payments")
     elif destination == "csv":
         csvfinal.append([None, totalPayment, totalPrincipal, totalInterest])
-        (noextratotalInterest, noextratotalPrincipal) = nopayamort(originalPrincipal, i, n)
+        noextratotalInterest = nopayamort(originalPrincipal, i, n)
         csvfinal.append(["Saved", noextratotalInterest-totalInterest, "in interest payments", None])
         writer = csv.writer(open("amort.csv", "w"))
         writer.writerows(csvfinal)
 
 def main():
+    """Grab the arguments and run the program."""
     arguments = getargs()
     ##################setup variables#####################
     P = int(arguments[2])
