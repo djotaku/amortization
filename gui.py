@@ -20,6 +20,7 @@ class Ui_Dialog(object):
         self.gridLayout.setContentsMargins(0, 0, 0, 0)
         self.gridLayout.setObjectName("gridLayout")
         self.lineEditInterest = QtWidgets.QLineEdit(self.gridLayoutWidget)
+        self.lineEditInterest.setText("")
         self.lineEditInterest.setObjectName("lineEditInterest")
         self.gridLayout.addWidget(self.lineEditInterest, 0, 3, 1, 1)
         self.lineEditMonth = QtWidgets.QLineEdit(self.gridLayoutWidget)
@@ -49,6 +50,7 @@ class Ui_Dialog(object):
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        self.lineEditInterest.setToolTip(_translate("Dialog", "Pre-divide interest by 100"))
         self.lineEditInterest.setPlaceholderText(_translate("Dialog", "0.0444"))
         self.lineEditMonth.setPlaceholderText(_translate("Dialog", "360"))
         self.pushButtonCalculate.setText(_translate("Dialog", "Calculate"))
