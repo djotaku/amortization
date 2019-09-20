@@ -58,7 +58,6 @@ def nopayamort(Principal, interest, months):
     """Calculate total interest paid if no extra principal payments made."""
     per = np.arange(1*months)+1
     ipmt = np.ipmt(interest, per, 1*months, Principal)
-    ppmt = np.ppmt(interest, per, 1*months, Principal)
     totalInterest = abs(np.sum(ipmt))
     return totalInterest
 
