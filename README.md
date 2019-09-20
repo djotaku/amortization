@@ -5,6 +5,7 @@ This is an amortization table for home mortgages, but it should work for anythin
 
 ## Commandline
 Usage:
+
     python amortization.py -csv|screen -P # -i # -n #
     
     example with principle of $270,000, 4.44% interest, for 30 years:
