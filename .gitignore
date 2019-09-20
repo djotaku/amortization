@@ -3,3 +3,5 @@
 *.txt
 *.csv
 extraprinciple-real
+*.pyc
+*cache*
