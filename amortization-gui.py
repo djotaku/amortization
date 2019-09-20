@@ -1,6 +1,6 @@
-from PyQt5.QtWidgets import QDialog, QApplication
 import sys
 import csv
+from PyQt5.QtWidgets import QDialog, QApplication
 from gui import *
 import amortization
 

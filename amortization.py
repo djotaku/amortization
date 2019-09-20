@@ -123,7 +123,7 @@ def output(principal, i, number_of_payments, monthly_payment, destination):
                 csvfinal.append([period, f"${monthly_payment:,.2f}",
                                  f"${monthly_payment-intpayment:,.2f}",
                                  f"${intpayment:,.2f}",
-                                 f"${extra_principal_this_period:,.2f}", 
+                                 f"${extra_principal_this_period:,.2f}",
                                  f"${principal:,.2f}"])
             #this should handle to totals being slightly off by amount of last payment
             total_principal = total_principal + (monthly_payment - intpayment)\
