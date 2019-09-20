@@ -152,15 +152,15 @@ def main():
     i=float(arguments[4])/12
     n=int(arguments[6])
     MonthlyPayment = (P*i)/(1-pow((1+i),-n))
-    (totalPrincipal,totalInterest,totalPayment) = (0,0,0)
+    (totalPrincipal,totalInterest,totalPayment) = (0, 0, 0)
     #####################################################
 
     if arguments[0] == '-csv':
-        output(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment,"csv")
+        output(P, i, n, MonthlyPayment, totalPrincipal, totalInterest, totalPayment, "csv")
     elif arguments[0] == '-screen':
-        output(P,i,n,MonthlyPayment,totalPrincipal,totalInterest,totalPayment,"screen")
+        output(P, i, n, MonthlyPayment, totalPrincipal, totalInterest, totalPayment, "screen")
     else:
         print(USAGE)
-        
+
 if __name__ == "__main__":
     main()
