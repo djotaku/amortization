@@ -139,7 +139,7 @@ def output(P, i, n, MonthlyPayment, totalPrincipal, totalInterest, totalPayment,
         (noextratotalInterest, noextratotalPrincipal) = nopayamort(originalPrincipal, i, n)
         print(f"Saved ${noextratotalInterest-totalInterest:.2f} in interest payments")
     elif destination == "csv":
-        csvfinal.append([None,totalPayment, totalPrincipal, totalInterest])
+        csvfinal.append([None, totalPayment, totalPrincipal, totalInterest])
         (noextratotalInterest, noextratotalPrincipal) = nopayamort(originalPrincipal, i, n)
         csvfinal.append(["Saved", noextratotalInterest-totalInterest, "in interest payments", None])
         writer = csv.writer(open("amort.csv", "w"))
@@ -148,9 +148,9 @@ def output(P, i, n, MonthlyPayment, totalPrincipal, totalInterest, totalPayment,
 def main():
     arguments = getargs()
     ##################setup variables#####################
-    P=int(arguments[2])
-    i=float(arguments[4])/12
-    n=int(arguments[6])
+    P = int(arguments[2])
+    i = float(arguments[4])/12
+    n = int(arguments[6])
     MonthlyPayment = (P*i)/(1-pow((1+i), -n))
     (totalPrincipal, totalInterest, totalPayment) = (0, 0, 0)
     #####################################################
