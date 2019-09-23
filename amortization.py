@@ -5,7 +5,7 @@ screen or a CSV file.
 """
 
 __author__ = "Eric Mesa"
-__version__ = "v2.9"
+__version__ = "v4.0"
 __license__ = "GNU GPL v3.0"
 __copyright__ = "(c) 2010-2019 Eric Mesa"
 __email__ = "ericsbinaryworld at gmail dot com"
