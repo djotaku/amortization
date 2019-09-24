@@ -2,6 +2,11 @@
 *.pdf
 *.txt
 *.csv
-extraprinciple-real
+extraprincipal-real
 *.pyc
 *cache*
+bin/*
+lib/*
+lib64
+pyvenv.cfg
+
