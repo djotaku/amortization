@@ -28,3 +28,7 @@ jobs:
       run: |
         pip install pytest
         pytest test.py
+    - name: Build with Pyinstaller
+      run: |
+        pip install pyinstaller
+        pyinstaller amortization-gui.py
