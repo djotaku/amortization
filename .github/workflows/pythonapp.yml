@@ -37,4 +37,4 @@ jobs:
       uses: actions/upload-artifact@v1.0.0
       with: 
         name: Linux-Build
-        path: build/amortization-gui/amortization-gui.tar.gz
+        path: amortization-gui.tar.gz
