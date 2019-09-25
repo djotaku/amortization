@@ -32,3 +32,9 @@ jobs:
       run: |
         pip install pyinstaller
         pyinstaller amortization-gui.py
+        tar fcvz amortization-gui.tar.gz  build/amortization-gui/
+    - name: Upload artifact
+      uses: actions/upload-artifact@v1.0.0
+      with: 
+        name: Linux-Build
+        path: build/amortization-gui/amortization-gui.tar.gz
