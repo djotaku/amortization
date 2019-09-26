@@ -28,13 +28,3 @@ jobs:
       run: |
         pip install pytest
         pytest test.py
-    - name: Build with Pyinstaller
-      run: |
-        pip install pyinstaller
-        pyinstaller amortization-gui.py
-        tar fcvz amortization-gui.tar.gz  dist/amortization-gui/
-    - name: Upload artifact
-      uses: actions/upload-artifact@v1.0.0
-      with: 
-        name: Linux-Build
-        path: amortization-gui.tar.gz
