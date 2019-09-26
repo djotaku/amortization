@@ -4,7 +4,7 @@
 
 [![Actions Status](https://github.com/djotaku/amortization/workflows/Linux_Build/badge.svg)](https://github.com/djotaku/amortization/actions)
 
-Amortization Program for creating a table of payments
+An amortization Program for creating a table of payments
 
 This is an amortization table for home mortgages, but it should work for anything else that follows that type of math - say a car loan.
 
