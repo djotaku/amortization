@@ -1,6 +1,6 @@
 # Amortization
 
-[![Actions Status](https://github.com/djotaku/amortization/workflows/Lint_Test/badge.svg)](https://github.com/djotaku/amortization/actions)
+[![Actions Status](https://github.com/djotaku/amortization/workflows/Lint_Test/badge.svg)](https://github.com/djotaku/amortization/actions) [![Actions Status](https://github.com/djotaku/amortization/workflows/Linux_Build/badge.svg)](https://github.com/djotaku/amortization/actions)
 
 Amortization Program for creating a table of payments
 
