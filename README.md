@@ -33,6 +33,10 @@ Usage:
 
 ## GUI
 
+![A screenshot of the Amortization GUI](https://github.com/djotaku/amortization/blob/master/screenshots/amortgui1.png)
+
+![A screenshot of the Amortization GUI showing the savings from extra principal payments](https://github.com/djotaku/amortization/blob/master/screenshots/amortgui1.png)
+
 Runs on QT. Install those libraries via pip (especially if you run on Windows) or your package manager (on Linux).
 
 Run amortization-gui.py
