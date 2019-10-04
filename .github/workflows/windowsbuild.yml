@@ -32,9 +32,9 @@ jobs:
       run: |
         pip install pyinstaller
         pyinstaller amortization-gui.py
-        tar.exe -cf amortization-gui.zip  dist/amortization-gui/
+        cp dist/amortization-gui/Qt5Core.dll  dist/amortization-gui/PyQt5/bin
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
       with: 
         name: Windows-Build
-        path: amortization-gui.zip
+        path: dist/amortization-gui
