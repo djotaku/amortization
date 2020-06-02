@@ -150,11 +150,11 @@ def output(principal, i, number_of_payments, monthly_payment, destination):
                         \t ${extra_principal_this_period:,.2f}\
                             \t ${principal:,.2f}")
         elif destination == "csv":
-            csvfinal.append([period, f"${monthly_payment:,.2f}",
-                             f"${monthly_payment-intpayment:,.2f}",
-                             f"${intpayment:,.2f}",
-                             f"${extra_principal_this_period:,.2f}",
-                             f"${principal:,.2f}"])
+            csvfinal.append([period, monthly_payment,
+                             monthly_payment-intpayment,
+                             intpayment,
+                             extra_principal_this_period,
+                             principal])
         # total stuff
         total_principal = total_principal + (monthly_payment - intpayment)\
             + extra_principal_this_period
