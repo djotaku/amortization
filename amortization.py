@@ -5,15 +5,18 @@ screen or a CSV file.
 """
 
 __author__ = "Eric Mesa"
-__version__ = "v4.0"
+__version__ = "v4.1"
 __license__ = "GNU GPL v3.0"
 __copyright__ = "(c) 2010-2019 Eric Mesa"
 __email__ = "ericsbinaryworld at gmail dot com"
 
 import csv
+from decimal import *
 import sys
 
 import numpy as np
+
+getcontext().prec = 6
 
 USAGE = """
     Usage:
@@ -114,7 +117,7 @@ def output(principal, i, number_of_payments, monthly_payment, destination):
     # generate amortization table
     while period < number_of_payments+1:
         intpayment = (principal*i)
-        extra_principal_this_period = float(principaldict[period])
+        extra_principal_this_period = Decimal(principaldict[period])
         if period == number_of_payments:
             monthly_payment = principal + intpayment
 
@@ -129,11 +132,11 @@ def output(principal, i, number_of_payments, monthly_payment, destination):
                             \t ${extra_principal_this_period:,.2f}\
                                 \t ${principal:,.2f}")
             elif destination == "csv":
-                csvfinal.append([period, f"${monthly_payment:,.2f}",
-                                 f"${monthly_payment-intpayment:,.2f}",
-                                 f"${intpayment:,.2f}",
-                                 f"${extra_principal_this_period:,.2f}",
-                                 f"${principal:,.2f}"])
+                csvfinal.append([period, monthly_payment,
+                             (monthly_payment-intpayment).quantize(Decimal('.01')),
+                             intpayment.quantize(Decimal('.01')),
+                             extra_principal_this_period.quantize(Decimal('.01')),
+                             principal])
             # this should handle to totals being slightly off by amount of last payment
             total_principal = total_principal + (monthly_payment - intpayment)\
                 + extra_principal_this_period
@@ -151,9 +154,9 @@ def output(principal, i, number_of_payments, monthly_payment, destination):
                             \t ${principal:,.2f}")
         elif destination == "csv":
             csvfinal.append([period, monthly_payment,
-                             monthly_payment-intpayment,
-                             intpayment,
-                             extra_principal_this_period,
+                             (monthly_payment-intpayment).quantize(Decimal('.01')),
+                             intpayment.quantize(Decimal('.01')),
+                             extra_principal_this_period.quantize(Decimal('.01')),
                              principal])
         # total stuff
         total_principal = total_principal + (monthly_payment - intpayment)\
@@ -181,10 +184,10 @@ def main():
     """Grab the arguments and run the program."""
     arguments = getargs()
     # #################setup variables#####################
-    principal = int(arguments[2])
-    i = float(arguments[4])/12
-    number_of_payments = int(arguments[6])
-    monthly_payment = (principal*i)/(1-pow((1+i), -number_of_payments))
+    principal = Decimal(arguments[2])
+    i = Decimal(arguments[4])/Decimal(12)
+    number_of_payments = Decimal(arguments[6]) 
+    monthly_payment = (principal*i)/(Decimal(1)-pow((Decimal(1)+i), -number_of_payments))
     # ####################################################
 
     if arguments[0] == '-csv':
