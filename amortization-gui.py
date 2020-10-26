@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QDialog, QApplication
 from gui import *
 import amortization
 
+
 class AmortGUI(QDialog):
     def __init__(self):
         super().__init__()
@@ -12,6 +13,7 @@ class AmortGUI(QDialog):
         self.ui.pushButtonCalculate.clicked.connect(self.calculate)
         self.model = QtGui.QStandardItemModel(self)
         self.ui.tableViewCSV.setModel(self.model)
+
     def calculate(self):
         self.principal = int(self.ui.lineEditPrinciple.text())
         self.interest = amortization.Decimal(self.ui.lineEditInterest.text())/12
@@ -23,7 +25,6 @@ class AmortGUI(QDialog):
                 items = [QtGui.QStandardItem(field) for field in row]
                 self.model.appendRow(items)
         
-
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
