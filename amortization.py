@@ -5,56 +5,46 @@ screen or a CSV file.
 """
 
 __author__ = "Eric Mesa"
-__version__ = "v4.1"
+__version__ = "v5.0"
 __license__ = "GNU GPL v3.0"
 __copyright__ = "(c) 2010-2019 Eric Mesa"
 __email__ = "ericsbinaryworld at gmail dot com"
 
+import argparse
 import csv
 from decimal import *
-import sys
 
 import numpy as np
 
 getcontext().prec = 6
 
-USAGE = """
-    Usage:
-    python amortization.py -csv|screen -P # -i # -n #
+epilogue = """
+    If you want to see the effect of extra monthly payments:\n
+    -create a file called extraprincipal\n
+    -put the values in one after another one line at a time.\n
 
-    example with principle of $270,000, 4.44% interest, for 30 years:
-    python amortization.py -csv -P 270000 -i .0444 -n 360
-
-    -csv:     create a Comma Separated Values file to import into excel
-    -screen:  print the amortization table to screen
-    -P:       for # enter principal amount
-    -i:       for # enter interest as a decimal
-    -n:       for # enter number of months
-
-    If you want to see the effect of extra monthly payments:
-    -create a file called extraprincipal
-    -put the values in one after another one line at a time.
-
-    Ex:
-    0
-    200
-    300
-    0
-
+    Ex:\n
+    0\n
+    200\n
+    300\n
+    0\n
+\n
     would be 0 extra principal the first month, 200 extra the second month,etc
     """
 
 
-# helper functions
-def getargs():
-    """Grab the commandline arguments.
-
-    Put them into a list and give help if no arguments provided.
-    """
-    args = sys.argv[1:]
-    if len(args) < 7:
-        sys.exit(USAGE)
-    return args
+def get_args():
+    """ Grab the commandline arguments."""
+    parser = argparse.ArgumentParser(epilog=epilogue)
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument("-c", "--csv", action='store_true',
+                       help="create a Comma Separated Values file to import into excel")
+    group.add_argument('-s', '--screen', action='store_true', help="print the amortization table to the screen")
+    parser.add_argument("-P", '--principal', required=True, help='enter the amount of the principal (no dollar sign')
+    parser.add_argument('-i', '--interest', required=True,
+                        help='enter interest as a decimal. eg: 4.44 percent interest would be 0.0444')
+    parser.add_argument('-m', '--months', required=True, help='enter number of months in the loan')
+    return parser.parse_args()
 
 
 def nopayamort(principal, interest, months):
@@ -182,20 +172,18 @@ def output(principal, i, number_of_payments, monthly_payment, destination):
 
 def main():
     """Grab the arguments and run the program."""
-    arguments = getargs()
+    arguments = get_args()
     # #################setup variables#####################
-    principal = Decimal(arguments[2])
-    i = Decimal(arguments[4])/Decimal(12)
-    number_of_payments = Decimal(arguments[6]) 
+    principal = Decimal(arguments.principal)
+    i = Decimal(arguments.interest)/Decimal(12)
+    number_of_payments = Decimal(arguments.months)
     monthly_payment = (principal*i)/(Decimal(1)-pow((Decimal(1)+i), -number_of_payments))
     # ####################################################
 
-    if arguments[0] == '-csv':
+    if arguments.csv:
         output(principal, i, number_of_payments, monthly_payment, "csv")
-    elif arguments[0] == '-screen':
+    elif arguments.screen:
         output(principal, i, number_of_payments, monthly_payment, "screen")
-    else:
-        print(USAGE)
 
 
 if __name__ == "__main__":

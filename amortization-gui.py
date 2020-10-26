@@ -4,7 +4,8 @@ from PyQt5.QtWidgets import QDialog, QApplication
 from gui import *
 import amortization
 
-class AmortGUI(QDialog):
+
+class AmortizationGUI(QDialog):
     def __init__(self):
         super().__init__()
         self.ui = Ui_Dialog()
@@ -12,21 +13,21 @@ class AmortGUI(QDialog):
         self.ui.pushButtonCalculate.clicked.connect(self.calculate)
         self.model = QtGui.QStandardItemModel(self)
         self.ui.tableViewCSV.setModel(self.model)
+
     def calculate(self):
-        self.principal = int(self.ui.lineEditPrinciple.text())
-        self.interest = amortization.Decimal(self.ui.lineEditInterest.text())/12
-        self.number_of_payments = int(self.ui.lineEditMonth.text())
-        self.monthly_payment = (self.principal*self.interest)/(1-pow((1+self.interest), -self.number_of_payments))
-        amortization.output(self.principal, self.interest, self.number_of_payments, self.monthly_payment, "csv")
-        with open("amort.csv","r") as csvinput:
-            for row in csv.reader(csvinput):
+        principal = int(self.ui.lineEditPrinciple.text())
+        interest = amortization.Decimal(self.ui.lineEditInterest.text())/12
+        number_of_payments = int(self.ui.lineEditMonth.text())
+        monthly_payment = (principal*interest)/(1-pow((1+interest), - number_of_payments))
+        amortization.output(principal, interest, number_of_payments, monthly_payment, "csv")
+        with open("amort.csv", "r") as csv_input:
+            for row in csv.reader(csv_input):
                 items = [QtGui.QStandardItem(field) for field in row]
                 self.model.appendRow(items)
         
 
-
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    w = AmortGUI()
+    w = AmortizationGUI()
     w.show()
     sys.exit(app.exec_())
