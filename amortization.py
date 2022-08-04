@@ -14,6 +14,7 @@ import argparse
 import csv
 from decimal import *
 
+import numpy_financial as npf
 import numpy as np
 
 getcontext().prec = 6
@@ -50,7 +51,7 @@ def get_args():
 def nopayamort(principal, interest, months):
     """Calculate total interest paid if no extra principal payments made."""
     per = np.arange(1*months)+1
-    ipmt = np.ipmt(interest, per, 1*months, principal)
+    ipmt = npf.ipmt(interest, per, 1*months, principal)
     total_interest = abs(np.sum(ipmt))
     return total_interest
 
