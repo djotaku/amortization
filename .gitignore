@@ -13,3 +13,6 @@ pyvenv.cfg
 build/*
 dist/*
 outputs/*
+venv/
+github_builds
+.idea
