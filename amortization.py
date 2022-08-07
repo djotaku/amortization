@@ -7,7 +7,7 @@ screen or a CSV file.
 __author__ = "Eric Mesa"
 __version__ = "v5.0"
 __license__ = "GNU GPL v3.0"
-__copyright__ = "(c) 2010-2019 Eric Mesa"
+__copyright__ = "(c) 2010-2022 Eric Mesa"
 __email__ = "ericsbinaryworld at gmail dot com"
 
 import argparse
@@ -17,7 +17,7 @@ from decimal import *
 import numpy_financial as npf
 import numpy as np
 
-getcontext().prec = 6
+getcontext().prec = 20
 
 epilogue = """
     If you want to see the effect of extra monthly payments:\n
