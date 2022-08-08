@@ -49,21 +49,21 @@ def get_args():
     return parser.parse_args()
 
 
-def nopayamort(principal, interest, months):
+def nopayamort(principal: Decimal, interest: Decimal, months: Decimal) -> float:
     """Calculate total interest paid if no extra principal payments made."""
     per = np.arange(1 * months) + 1
     ipmt = npf.ipmt(interest, per, 1 * months, principal)
     return abs(np.sum(ipmt))
 
 
-def titles(principal, i, monthly_payment):
+def titles(principal: Decimal, i: Decimal, monthly_payment: Decimal):
     """Print titles to screen or into CSV file."""
     print(f"Loan Amount: {principal}")
     print(f"Annual Interest: {i * 12 * 100}")
     print(f"Payment: {monthly_payment:10.2f}")
 
 
-def extraprincialdict(number_of_payments):
+def extraprincialdict(number_of_payments: Decimal) -> dict:
     """Read in the extra principal text file and return a dictionary with the values."""
     extra = []
     count = 0
@@ -84,7 +84,7 @@ def extraprincialdict(number_of_payments):
     return dict(dictitems)
 
 
-def output(principal, i, number_of_payments, monthly_payment, destination):
+def output(principal: Decimal, i: Decimal, number_of_payments: Decimal, monthly_payment: Decimal, destination: str):
     """Create the amortization table and outputs to CSV or screen."""
     csv_final = []
     no_extra_total_interest = nopayamort(principal, i, number_of_payments)
@@ -111,56 +111,57 @@ def output(principal, i, number_of_payments, monthly_payment, destination):
 
     # generate amortization table
     while period < number_of_payments + 1:
-        intpayment = (principal * i)
+        interest_payment = (principal * i)
         extra_principal_this_period = Decimal(principaldict[period])
         if period == number_of_payments:
-            monthly_payment = principal + intpayment
+            monthly_payment = principal + interest_payment
 
         # this should handle finishing early because of extra interest payments
         if principal < monthly_payment:
-            monthly_payment = principal + intpayment
-            principal = principal - (monthly_payment - intpayment) - extra_principal_this_period
+            monthly_payment = principal + interest_payment
+            principal = principal - (monthly_payment - interest_payment) - extra_principal_this_period
             if destination == "screen":
-                table.add_row(f"{period:d}", f"${monthly_payment:,.2f}", f"${monthly_payment - intpayment:,.2f}",
-                              f"${intpayment:,.2f}", f"${extra_principal_this_period:,.2f}", f"${principal:,.2f}")
+                table.add_row(f"{period:d}", f"${monthly_payment:,.2f}", f"${monthly_payment - interest_payment:,.2f}",
+                              f"${interest_payment:,.2f}", f"${extra_principal_this_period:,.2f}", f"${principal:,.2f}")
             elif destination == "csv":
                 csv_final.append([period, monthly_payment,
-                                 (monthly_payment - intpayment).quantize(Decimal('.01')),
-                                 intpayment.quantize(Decimal('.01')),
+                                 (monthly_payment - interest_payment).quantize(Decimal('.01')),
+                                 interest_payment.quantize(Decimal('.01')),
                                  extra_principal_this_period.quantize(Decimal('.01')),
                                  principal])
             # this should handle to totals being slightly off by amount of last payment
-            total_principal = total_principal + (monthly_payment - intpayment) + extra_principal_this_period
-            total_interest = total_interest + intpayment
+            total_principal = total_principal + (monthly_payment - interest_payment) + extra_principal_this_period
+            total_interest = total_interest + interest_payment
             total_payment = total_payment + monthly_payment + extra_principal_this_period
             break
 
-        principal = principal - (monthly_payment - intpayment) - extra_principal_this_period
+        principal = principal - (monthly_payment - interest_payment) - extra_principal_this_period
 
         if destination == "screen":
-            table.add_row(f"{period:d}", f"${monthly_payment:,.2f}", f"${monthly_payment - intpayment:,.2f}",
-                          f"${intpayment:,.2f}", f"${extra_principal_this_period:,.2f}", f"${principal:,.2f}")
+            table.add_row(f"{period:d}", f"${monthly_payment:,.2f}", f"${monthly_payment - interest_payment:,.2f}",
+                          f"${interest_payment:,.2f}", f"${extra_principal_this_period:,.2f}", f"${principal:,.2f}")
         elif destination == "csv":
             csv_final.append([period, monthly_payment,
-                             (monthly_payment - intpayment).quantize(Decimal('.01')),
-                             intpayment.quantize(Decimal('.01')),
+                             (monthly_payment - interest_payment).quantize(Decimal('.01')),
+                             interest_payment.quantize(Decimal('.01')),
                              extra_principal_this_period.quantize(Decimal('.01')),
                              principal])
         # total stuff
-        total_principal = total_principal + (monthly_payment - intpayment) + extra_principal_this_period
-        total_interest = total_interest + intpayment
+        total_principal = total_principal + (monthly_payment - interest_payment) + extra_principal_this_period
+        total_interest = total_interest + interest_payment
         total_payment = total_payment + monthly_payment + extra_principal_this_period
 
         period += 1
-    console = Console()
-    console.print(table)
+
     # generate totals
     if destination == "screen":
-        print(f"Totals \t ${total_payment:,.2f} \t ${total_principal:,.2f}\
-            \t ${total_interest:,.2f}")
+        table.add_row("Totals", f"${total_payment:,.2f}", f"${total_principal:,.2f}", f"${total_interest:,.2f}" )
+        console = Console()
+        console.print(table)
         print(f"Saved ${no_extra_total_interest - total_interest:,.2f} in interest payments")
     elif destination == "csv":
-        csv_final.extend(([None, f"${total_payment:,.2f}", f"${total_principal:,.2f}", f"${total_interest:,.2f}"], ["Saved", f"${no_extra_total_interest - total_interest:,.2f}", "in interest", None]))
+        csv_final.extend(([None, f"${total_payment:,.2f}", f"${total_principal:,.2f}", f"${total_interest:,.2f}"],
+                          ["Saved", f"${no_extra_total_interest - total_interest:,.2f}", "in interest", None]))
 
         writer = csv.writer(open("amort.csv", "w"))
         writer.writerows(csv_final)
