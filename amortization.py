@@ -12,6 +12,7 @@ __email__ = "ericsbinaryworld at gmail dot com"
 
 import argparse
 import csv
+import decimal
 from decimal import *
 
 import numpy_financial as npf
@@ -176,6 +177,8 @@ def main():
     i = Decimal(arguments.interest) / Decimal(12)
     number_of_payments = Decimal(arguments.months)
     monthly_payment = (principal * i) / (Decimal(1) - pow((Decimal(1) + i), -number_of_payments))
+    monthly_payment = monthly_payment.quantize(Decimal('0.01'), decimal.ROUND_UP)
+    # print(monthly_payment.quantize(Decimal('0.01'), decimal.ROUND_UP))
     # ####################################################
 
     if arguments.csv:
