@@ -1,5 +1,5 @@
 numpy==1.26.4
 numpy-financial==1.0.0
 PyQt5==5.13.1
-PyQt5-sip==12.9.0
+PyQt5-sip==12.13.0
 rich==13.7.1
